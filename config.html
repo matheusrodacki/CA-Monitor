@@ -120,6 +120,19 @@
       </div>
     </div>
     <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const muxData = JSON.parse(localStorage.getItem('muxes'));
+        if (muxData) {
+          const muxList = document.getElementById('muxList');
+          for (const [key, value] of Object.entries(muxData)) {
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.textContent = `${key}: Primário - ${value.primary} | Backup - ${value.backup}`;
+            muxList.appendChild(listItem);
+          }
+        }
+      });
+
       document
         .getElementById('toggleSidebar')
         .addEventListener('click', function () {
@@ -128,6 +141,12 @@
           const mainContent = document.getElementById('main-content');
           mainContent.classList.toggle('expanded');
           mainContent.classList.toggle('collapsed');
+        });
+
+      document
+        .getElementById('homeButton')
+        .addEventListener('click', function () {
+          window.location.href = 'index.html';
         });
     </script>
     <script>
@@ -148,6 +167,7 @@
                   listItem.textContent = `${key}: Primário - ${value.primary} | Backup - ${value.backup}`;
                   muxList.appendChild(listItem);
                 }
+                localStorage.setItem('muxes', JSON.stringify(muxData));
               } catch (error) {
                 console.error('Erro ao carregar o arquivo JSON:', error);
                 alert(
@@ -195,6 +215,13 @@
             listItem.classList.add('list-group-item');
             listItem.textContent = `${systemName}: Primário - ${primaryMuxIp} | Backup - ${backupMuxIp}`;
             muxList.appendChild(listItem);
+
+            const muxData = JSON.parse(localStorage.getItem('muxes')) || {};
+            muxData[systemName] = {
+              primary: primaryMuxIp,
+              backup: backupMuxIp,
+            };
+            localStorage.setItem('muxes', JSON.stringify(muxData));
 
             document.getElementById('systemName').value = '';
             document.getElementById('primaryMuxIp').value = '';

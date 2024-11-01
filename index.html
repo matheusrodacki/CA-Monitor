@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CA Monitor - Configuração do Mux</title>
+    <title>CA Monitor - API Data</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <style>
       .container-fluid {
-        margin-top: 70px;
+        margin-top: 70px; /* Para ajustar e garantir espaço para o progresso */
+      }
+      .service-card {
+        height: 100%; /* Ajusta para o tamanho total do container */
+        margin-bottom: 20px; /* Margem vertical entre os cards */
+      }
+      .card-columns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+      .card-columns .card {
+        flex: 0 0 260px; /* Define uma largura fixa para cada card */
+        max-width: 260px;
+        margin-bottom: 1rem;
+      }
+      .card {
+        break-inside: avoid; /* Evita quebras indesejadas dos cartões */
+      }
+      .card-body {
+        font-size: 0.8rem; /* Reduz o tamanho do texto para caber melhor em telas FullHD */
+        max-height: 200px; /* Limita a altura do conteúdo */
+        overflow-y: auto; /* Permite rolagem dentro do card */
       }
       .sidebar {
         position: fixed;
@@ -14,14 +37,24 @@
         height: 100%;
         width: 300px;
         background-color: #343a40;
-        padding: 70px 15px 20px 15px;
+        padding: 70px 15px 20px 15px; /* Margens internas: topo, direita, base e esquerda */
         color: white;
         z-index: 1000;
         transition: all 0.3s ease-in-out;
       }
-      .sidebar.collapsed {
-        right: -300px;
+
+      .sidebar h4 {
+        margin-bottom: 20px; /* Espaço inferior */
       }
+
+      .sidebar .form-group {
+        margin-bottom: 20px; /* Espaço inferior entre os grupos de formulário */
+      }
+
+      .sidebar.collapsed {
+        right: -300px; /* Mova o sidebar completamente para fora da tela */
+      }
+
       #toggleSidebar {
         position: absolute;
         top: 10px;
@@ -30,88 +63,109 @@
         z-index: 1100;
         transition: all 0.3s ease-in-out;
       }
+
       #main-content {
         transition: margin-right 0.3s ease-in-out;
       }
+
       #main-content.expanded {
-        margin-right: 320px;
+        margin-right: 320px; /* Ajuste para garantir espaço adequado ao sidebar expandido */
       }
+
       #main-content.collapsed {
-        margin-right: 20px;
+        margin-right: 20px; /* Ajuste para garantir espaço mínimo quando o sidebar está fechado */
       }
+
       .menu-icon {
         width: 20px;
         height: 20px;
         filter: invert(100%) brightness(200%);
       }
-      body {
-        background-color: #f8f9fa;
+
+      .alert-icon {
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin-left: 10px;
       }
     </style>
   </head>
-  <body class="container-fluid">
-    <div id="sidebar" class="sidebar">
+  <body class="container-fluid" style="background-color: #fafbfe">
+    <div id="sidebar" class="sidebar collapsed">
       <button id="toggleSidebar" class="btn btn-primary mb-3">
         <img
           src="icons/menu-open.svg"
           alt="Menu"
           id="menuIcon"
-          class="menu-icon" />
+          class="menu-icon"
+          style="width: 20px; height: 20px" />
       </button>
-      <button id="homeButton" class="btn btn-secondary mb-3">
-        Voltar para Home
-      </button>
-    </div>
-    <div id="main-content" class="expanded">
-      <div class="container mt-5">
-        <h4>Configurações de Mux</h4>
-        <div class="form-group">
-          <label for="muxFileInput" class="form-label"
-            >Carregar arquivo JSON de Mux:</label
-          >
-          <input
-            type="file"
-            id="muxFileInput"
-            class="form-control mt-2"
-            accept="application/json" />
-        </div>
-        <div class="form-group">
-          <label for="primaryMuxIp" class="form-label"
-            >IP do Mux Principal:</label
-          >
-          <input
-            type="text"
-            id="primaryMuxIp"
-            class="form-control mt-2"
-            placeholder="Digite o IP do Mux Principal" />
-        </div>
-        <div class="form-group">
-          <label for="backupMuxIp" class="form-label">IP do Mux Backup:</label>
-          <input
-            type="text"
-            id="backupMuxIp"
-            class="form-control mt-2"
-            placeholder="Digite o IP do Mux Backup" />
-        </div>
-        <button id="addMuxButton" class="btn btn-success mb-3">
-          Adicionar Novo Mux
-        </button>
-        <button id="saveButton" class="btn btn-primary">
-          Salvar Configurações
+      <h4>Configurações</h4>
+      <div class="form-group">
+        <label for="systemSelect" class="form-label">
+          Selecione um sistema:
+        </label>
+        <select id="systemSelect" class="form-select"></select>
+      </div>
+      <div class="form-group">
+        <label for="updateIntervalSelect" class="form-label">
+          Intervalo de atualização:
+        </label>
+        <select
+          id="updateIntervalSelect"
+          class="form-select"
+          onchange="updateAutoFetchInterval()">
+          <option value="1000">1 segundo</option>
+          <option value="3000">3 segundos</option>
+          <option value="5000" selected>5 segundos</option>
+          <option value="10000">10 segundos</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button id="configButton" class="btn btn-secondary">
+          <img
+            src="icons/cog-outline.svg"
+            alt="Configurações"
+            class="menu-icon"
+            style="width: 20px; height: 20px" />
         </button>
       </div>
     </div>
-    <script>
-      document
-        .getElementById('toggleSidebar')
-        .addEventListener('click', function () {
-          const sidebar = document.getElementById('sidebar');
-          sidebar.classList.toggle('collapsed');
-          const mainContent = document.getElementById('main-content');
-          mainContent.classList.toggle('expanded');
-          mainContent.classList.toggle('collapsed');
-        });
-    </script>
+    <div class="progress fixed-top" style="height: 5px">
+      <div
+        id="loading-bar"
+        class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+        role="progressbar"
+        style="width: 0%"></div>
+    </div>
+    <h1 class="text-center mb-4">
+      Monitor de Controle de Scrambling
+      <img
+        id="alertIcon"
+        src="icons/bell-alert.svg"
+        alt="Estado do Alerta"
+        class="alert-icon" />
+    </h1>
+    <div class="row" id="main-content" class="collapsed">
+      <div class="col-md-12 px-2">
+        <div class="card p-4 mb-4" id="primary-mux">
+          <h3>
+            <span id="primary-system-title">Sistema Selecionado</span>
+            Primário
+          </h3>
+          <div id="services-primary" class="card-columns"></div>
+        </div>
+      </div>
+      <div class="col-md-12 px-2">
+        <div class="card p-4 mb-4" id="backup-mux">
+          <h3>
+            <span id="backup-system-title">Sistema Selecionado</span> Backup
+          </h3>
+          <div id="services-backup" class="card-columns"></div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

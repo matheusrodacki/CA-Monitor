@@ -16,25 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 50);
   }
 
-  // Função para carregar IPs dos muxes a partir de um arquivo JSON
-  function loadMuxesFromFile(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        try {
-          muxes = JSON.parse(e.target.result);
-          populateSystemSelect(muxes);
-          localStorage.setItem('muxes', JSON.stringify(muxes));
-          startAutoFetch();
-        } catch (error) {
-          alert('Erro ao ler o arquivo JSON: ' + error.message);
-        }
-      };
-      reader.readAsText(file);
-    }
-  }
-
   // Função para popular o select de sistemas com os dados do JSON
   function populateSystemSelect(muxes) {
     const systemSelect = document.getElementById('systemSelect');
@@ -353,6 +334,13 @@ document.addEventListener('DOMContentLoaded', () => {
     .getElementById('toggleSidebar')
     .addEventListener('click', toggleSidebar);
 
+  // Adiciona um listener de clique ao botão de configuração
+  document
+    .getElementById('configButton')
+    .addEventListener('click', function () {
+      window.location.href = 'config.html';
+    });
+
   // Adiciona um listener de clique ao ícone de alerta
   alertIcon.addEventListener('click', toggleAlertState);
 
@@ -375,8 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAlertIcon(); // Atualiza o ícone com base no estado atual
 
     startAutoFetch();
+
+    // Adiciona o listener de mudança ao select de sistema
     document
-      .getElementById('muxFileInput')
-      .addEventListener('change', loadMuxesFromFile);
+      .getElementById('systemSelect')
+      .addEventListener('change', startAutoFetch);
   };
 });
