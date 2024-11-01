@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CA Monitor - Configuração do Mux</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .container-fluid {
+        margin-top: 70px;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 300px;
+        background-color: #343a40;
+        padding: 70px 15px 20px 15px;
+        color: white;
+        z-index: 1000;
+        transition: all 0.3s ease-in-out;
+      }
+      .sidebar.collapsed {
+        right: -300px;
+      }
+      #toggleSidebar {
+        position: absolute;
+        top: 10px;
+        left: -50px;
+        transform: translateX(-50%);
+        z-index: 1100;
+        transition: all 0.3s ease-in-out;
+      }
+      #main-content {
+        transition: margin-right 0.3s ease-in-out;
+      }
+      #main-content.expanded {
+        margin-right: 320px;
+      }
+      #main-content.collapsed {
+        margin-right: 20px;
+      }
+      .menu-icon {
+        width: 20px;
+        height: 20px;
+        filter: invert(100%) brightness(200%);
+      }
+      body {
+        background-color: #f8f9fa;
+      }
+    </style>
+  </head>
+  <body class="container-fluid">
+    <div id="sidebar" class="sidebar collapsed">
+      <button id="toggleSidebar" class="btn btn-primary mb-3">
+        <img
+          src="icons/menu-open.svg"
+          alt="Menu"
+          id="menuIcon"
+          class="menu-icon" />
+      </button>
+      <button id="homeButton" class="btn btn-secondary mb-3">
+        Voltar para Home
+      </button>
+    </div>
+    <div id="main-content" class="collapsed">
+      <div class="container mt-5">
+        <h4>Configurações de Mux</h4>
+        <div class="form-group">
+          <label for="muxFileInput" class="form-label">
+            Carregar arquivo JSON de Mux:
+          </label>
+          <input
+            type="file"
+            id="muxFileInput"
+            class="form-control mt-2"
+            accept="application/json" />
+        </div>
+        <div class="form-group mt-4 mb-4">
+          <label for="muxList" class="form-label">Lista de Muxes:</label>
+          <ul id="muxList" class="list-group"></ul>
+        </div>
+        <div class="d-flex gap-3">
+          <div class="form-group flex-fill">
+            <label for="primaryMuxIp" class="form-label">
+              IP do Mux Principal:
+            </label>
+            <input
+              type="text"
+              id="primaryMuxIp"
+              class="form-control mt-2"
+              placeholder="Digite o IP do Mux Principal" />
+          </div>
+          <div class="form-group flex-fill">
+            <label for="backupMuxIp" class="form-label">
+              IP do Mux Backup:
+            </label>
+            <input
+              type="text"
+              id="backupMuxIp"
+              class="form-control mt-2"
+              placeholder="Digite o IP do Mux Backup" />
+          </div>
+        </div>
+        <div class="form-group mt-4">
+          <label for="systemName" class="form-label">Nome do Sistema:</label>
+          <input
+            type="text"
+            id="systemName"
+            class="form-control mt-2"
+            placeholder="Digite o nome do sistema" />
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button id="addSystemButton" class="btn btn-success">
+            Adicionar Sistema
+          </button>
+          <button id="exportJsonButton" class="btn btn-warning">
+            Exportar JSON
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById('toggleSidebar')
+        .addEventListener('click', function () {
+          const sidebar = document.getElementById('sidebar');
+          sidebar.classList.toggle('collapsed');
+          const mainContent = document.getElementById('main-content');
+          mainContent.classList.toggle('expanded');
+          mainContent.classList.toggle('collapsed');
+        });
+    </script>
+    <script>
+      document
+        .getElementById('muxFileInput')
+        .addEventListener('change', function (event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              try {
+                const muxData = JSON.parse(e.target.result);
+                const muxList = document.getElementById('muxList');
+                muxList.innerHTML = '';
+                for (const [key, value] of Object.entries(muxData)) {
+                  const listItem = document.createElement('li');
+                  listItem.classList.add('list-group-item');
+                  listItem.textContent = `${key}: Primário - ${value.primary} | Backup - ${value.backup}`;
+                  muxList.appendChild(listItem);
+                }
+              } catch (error) {
+                console.error('Erro ao carregar o arquivo JSON:', error);
+                alert(
+                  'Erro ao carregar o arquivo JSON. Verifique o formato do arquivo.'
+                );
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+
+      document
+        .getElementById('exportJsonButton')
+        .addEventListener('click', function () {
+          const muxListItems = document.getElementById('muxList').children;
+          const muxData = {};
+          for (let i = 0; i < muxListItems.length; i++) {
+            const listItem = muxListItems[i].textContent;
+            const [key, details] = listItem.split(': ');
+            const [primary, backup] = details
+              .split(' | ')
+              .map((item) => item.split(' - ')[1]);
+            muxData[key] = { primary, backup };
+          }
+          const jsonString = JSON.stringify(muxData, null, 2);
+          const blob = new Blob([jsonString], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'mux-config.json';
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+
+      document
+        .getElementById('addSystemButton')
+        .addEventListener('click', function () {
+          const systemName = document.getElementById('systemName').value;
+          const primaryMuxIp = document.getElementById('primaryMuxIp').value;
+          const backupMuxIp = document.getElementById('backupMuxIp').value;
+
+          if (systemName && primaryMuxIp && backupMuxIp) {
+            const muxList = document.getElementById('muxList');
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.textContent = `${systemName}: Primário - ${primaryMuxIp} | Backup - ${backupMuxIp}`;
+            muxList.appendChild(listItem);
+
+            document.getElementById('systemName').value = '';
+            document.getElementById('primaryMuxIp').value = '';
+            document.getElementById('backupMuxIp').value = '';
+          } else {
+            alert(
+              'Por favor, preencha todos os campos para adicionar um sistema.'
+            );
+          }
+        });
+    </script>
+  </body>
+</html>
