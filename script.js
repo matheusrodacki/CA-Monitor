@@ -7,6 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Referência ao elemento do ícone de alerta
   const alertIcon = document.getElementById('alertIcon');
 
+  // Função para salvar o estado de lastScramblingState de um sistema específico no localStorage
+  function saveScramblingState(system) {
+    const allStates =
+      JSON.parse(localStorage.getItem('lastScramblingState')) || {};
+    allStates[system] = lastScramblingState;
+    localStorage.setItem('lastScramblingState', JSON.stringify(allStates));
+  }
+
+  // Função para restaurar o estado de lastScramblingState de um sistema específico do localStorage
+  function loadScramblingState(system) {
+    const allStates =
+      JSON.parse(localStorage.getItem('lastScramblingState')) || {};
+    lastScramblingState = allStates[system] || {};
+  }
+
+  // Carrega o estado salvo no localStorage ao iniciar
+  loadScramblingState();
+
   // Função para iniciar o efeito de carregamento
   function startLoadingBar() {
     const loadingBar = document.getElementById('loading-bar');
@@ -191,6 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
           lastChangeTime = lastScramblingState[`${systemIP}-${pid.pid}`].time;
 
+          // Salva o estado atualizado no localStorage
+          saveScramblingState(systemIP);
+
           return `${pid.pid} 
                  ${pid.streamTypeDesc} 
                  ${bitrate} Mbps
@@ -334,6 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
     .getElementById('toggleSidebar')
     .addEventListener('click', toggleSidebar);
 
+  // Adiciona o listener de clique ao botão
+  document
+    .getElementById('updateIntervalSelect')
+    .addEventListener('click', updateAutoFetchInterval);
+
   // Adiciona um listener de clique ao botão de configuração
   document
     .getElementById('configButton')
@@ -365,8 +391,10 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoFetch();
 
     // Adiciona o listener de mudança ao select de sistema
-    document
-      .getElementById('systemSelect')
-      .addEventListener('change', startAutoFetch);
+    document.getElementById('systemSelect').addEventListener('change', () => {
+      const selectedSystem = document.getElementById('systemSelect').value;
+      loadScramblingState(selectedSystem);
+      startAutoFetch();
+    });
   };
 });
