@@ -1,0 +1,14 @@
+{
+  "J02": {
+    "primary": "localhost:3000/j02",
+    "backup": "localhost:3000/j02"
+  },
+  "J04": {
+    "primary": "localhost:3000/j04",
+    "backup": "localhost:3000/j04"
+  },
+  "J05": {
+    "primary": "localhost:3000/j05",
+    "backup": "localhost:3000/j05"
+  }
+}

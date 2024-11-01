@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CA Monitor - API Data</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .container-fluid {
+        margin-top: 70px; /* Para ajustar e garantir espaço para o progresso */
+      }
+      .service-card {
+        height: 100%; /* Ajusta para o tamanho total do container */
+        margin-bottom: 20px; /* Margem vertical entre os cards */
+      }
+      .card-columns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+      .card-columns .card {
+        flex: 0 0 260px; /* Define uma largura fixa para cada card */
+        max-width: 260px;
+        margin-bottom: 1rem;
+      }
+      .card {
+        break-inside: avoid; /* Evita quebras indesejadas dos cartões */
+      }
+      .card-body {
+        font-size: 0.8rem; /* Reduz o tamanho do texto para caber melhor em telas FullHD */
+        max-height: 200px; /* Limita a altura do conteúdo */
+        overflow-y: auto; /* Permite rolagem dentro do card */
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 300px;
+        background-color: #343a40;
+        padding: 70px 15px 20px 15px; /* Margens internas: topo, direita, base e esquerda */
+        color: white;
+        z-index: 1000;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sidebar h4 {
+        margin-bottom: 20px; /* Espaço inferior */
+      }
+
+      .sidebar .form-group {
+        margin-bottom: 20px; /* Espaço inferior entre os grupos de formulário */
+      }
+
+      .sidebar.collapsed {
+        right: -300px; /* Mova o sidebar completamente para fora da tela */
+      }
+
+      #toggleSidebar {
+        position: absolute;
+        top: 10px;
+        left: -50px;
+        transform: translateX(-50%);
+        z-index: 1100;
+        transition: all 0.3s ease-in-out;
+      }
+
+      #main-content {
+        transition: margin-right 0.3s ease-in-out;
+      }
+
+      #main-content.expanded {
+        margin-right: 320px; /* Ajuste para garantir espaço adequado ao sidebar expandido */
+      }
+
+      #main-content.collapsed {
+        margin-right: 20px; /* Ajuste para garantir espaço mínimo quando o sidebar está fechado */
+      }
+
+      .menu-icon {
+        width: 20px;
+        height: 20px;
+        filter: invert(100%) brightness(200%);
+      }
+
+      .alert-icon {
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body class="container-fluid" style="background-color: #fafbfe">
+    <div id="sidebar" class="sidebar collapsed">
+      <button id="toggleSidebar" class="btn btn-primary mb-3">
+        <img
+          src="icons/menu-open.svg"
+          alt="Menu"
+          id="menuIcon"
+          class="menu-icon"
+          style="width: 20px; height: 20px" />
+      </button>
+      <h4>Configurações</h4>
+      <div class="form-group">
+        <label for="systemSelect" class="form-label">
+          Selecione um sistema:
+        </label>
+        <select
+          id="systemSelect"
+          class="form-select"
+          onchange="startAutoFetch()">
+          <option value="J02">J02</option>
+          <option value="J04">J04</option>
+          <option value="J05">J05</option>
+          <option value="J06">J06</option>
+          <option value="J07">J07</option>
+          <option value="J08">J08</option>
+          <option value="J09">J09</option>
+          <option value="J10">J10</option>
+          <option value="J11">J11</option>
+          <option value="J12">J12</option>
+          <option value="J13">J13</option>
+          <option value="J14">J14</option>
+          <option value="J15">J15</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="updateIntervalSelect" class="form-label">
+          Intervalo de atualização:
+        </label>
+        <select
+          id="updateIntervalSelect"
+          class="form-select"
+          onchange="updateAutoFetchInterval()">
+          <option value="1000">1 segundo</option>
+          <option value="3000">3 segundos</option>
+          <option value="5000" selected>5 segundos</option>
+          <option value="10000">10 segundos</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="muxFileInput" class="form-label">
+          Carregar arquivo JSON de Muxes:
+        </label>
+        <input
+          type="file"
+          id="muxFileInput"
+          class="form-control mt-2"
+          accept="application/json" />
+      </div>
+    </div>
+    <div class="progress fixed-top" style="height: 5px">
+      <div
+        id="loading-bar"
+        class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+        role="progressbar"
+        style="width: 0%"></div>
+    </div>
+    <h1 class="text-center mb-4">
+      Monitor de Controle de Scrambling
+      <img
+        id="alertIcon"
+        src="icons/bell-alert.svg"
+        alt="Estado do Alerta"
+        class="alert-icon" />
+    </h1>
+    <div class="row" id="main-content" class="collapsed">
+      <div class="col-md-12 px-2">
+        <div class="card p-4 mb-4" id="primary-mux">
+          <h3>
+            <span id="primary-system-title">Sistema Selecionado</span>
+            Primário
+          </h3>
+          <div id="services-primary" class="card-columns"></div>
+        </div>
+      </div>
+      <div class="col-md-12 px-2">
+        <div class="card p-4 mb-4" id="backup-mux">
+          <h3>
+            <span id="backup-system-title">Sistema Selecionado</span> Backup
+          </h3>
+          <div id="services-backup" class="card-columns"></div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
