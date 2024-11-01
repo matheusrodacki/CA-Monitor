@@ -7,36 +7,14 @@
       .container-fluid {
         margin-top: 70px;
       }
-      .sidebar {
+      #homeButton {
         position: fixed;
-        top: 0;
-        right: 0;
-        height: 100%;
-        width: 300px;
-        background-color: #343a40;
-        padding: 70px 15px 20px 15px;
-        color: white;
-        z-index: 1000;
-        transition: all 0.3s ease-in-out;
-      }
-      .sidebar.collapsed {
-        right: -300px;
-      }
-      #toggleSidebar {
-        position: absolute;
         top: 10px;
-        left: -50px;
-        transform: translateX(-50%);
+        right: 10px; /* Posicionamento no lado direito */
         z-index: 1100;
-        transition: all 0.3s ease-in-out;
       }
       #main-content {
         transition: margin-right 0.3s ease-in-out;
-      }
-      #main-content.expanded {
-        margin-right: 320px;
-      }
-      #main-content.collapsed {
         margin-right: 20px;
       }
       .menu-icon {
@@ -50,23 +28,14 @@
     </style>
   </head>
   <body class="container-fluid">
-    <div id="sidebar" class="sidebar collapsed">
-      <button id="toggleSidebar" class="btn btn-primary mb-3">
-        <img
-          src="icons/menu-open.svg"
-          alt="Menu"
-          id="menuIcon"
-          class="menu-icon" />
-      </button>
-      <button id="homeButton" class="btn btn-secondary mb-3">
+    <div id="main-content">
+      <button id="homeButton" class="btn btn-primary mb-3">
         <img
           src="icons/home-outline.svg"
           alt="Home"
           class="menu-icon"
           style="width: 20px; height: 20px" />
       </button>
-    </div>
-    <div id="main-content" class="collapsed">
       <div class="container mt-5">
         <h4>Configurações de Mux</h4>
         <div class="form-group">
@@ -138,22 +107,11 @@
       });
 
       document
-        .getElementById('toggleSidebar')
-        .addEventListener('click', function () {
-          const sidebar = document.getElementById('sidebar');
-          sidebar.classList.toggle('collapsed');
-          const mainContent = document.getElementById('main-content');
-          mainContent.classList.toggle('expanded');
-          mainContent.classList.toggle('collapsed');
-        });
-
-      document
         .getElementById('homeButton')
         .addEventListener('click', function () {
           window.location.href = 'index.html';
         });
-    </script>
-    <script>
+
       document
         .getElementById('muxFileInput')
         .addEventListener('change', function (event) {
