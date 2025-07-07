@@ -1,14 +1,837 @@
-{
-  "J02": {
-    "primary": "localhost:3000/j02",
-    "backup": "localhost:3000/j02"
-  },
-  "J04": {
-    "primary": "localhost:3000/j04",
-    "backup": "localhost:3000/j04"
-  },
-  "J05": {
-    "primary": "localhost:3000/j05",
-    "backup": "localhost:3000/j05"
+[
+  {
+    "Name": "J19-16-PRI-OUT",
+    "TransportStreamID": 24722,
+    "AutoTransportStreamID": false,
+    "NetworkID": 162,
+    "OriginalNetworkID": 162,
+    "Bitrate": 52180000,
+    "Conformance": "DVB",
+    "AutoRemap": false,
+    "NullPacketStripping": false,
+    "PidSharing": true,
+    "IncreasedLatency": 0,
+    "OverflowStrategy": { "StreamTypesPriority": [], "PidPriority": [] },
+    "ClockReference": {
+      "Mode": "Auto Pcr",
+      "PidSource": 0,
+      "RestampPcr": false
+    },
+    "Outputs": [
+      {
+        "Address": "232.10.19.163",
+        "Port": 51963,
+        "Interface": "enp3s0f0",
+        "RedundancyMode": "None",
+        "BackupInterface": "None",
+        "TOS": 0,
+        "TTL": 7,
+        "NbPackets": 7,
+        "ClearState": false,
+        "Protocol": { "RTPEnable": true, "RTPConfig": { "ManualSsrc": false } },
+        "Spoofing": { "IPSpoofingEnable": false },
+        "Enabled": true,
+        "UID": 4
+      }
+    ],
+    "AsiOutputs": [],
+    "BandwidthReservation": {
+      "NominalBandwidth": 0,
+      "MaximumBandwidth": 0,
+      "Components": []
+    },
+    "UID": 13293,
+    "SITables": {
+      "PAT": { "Mode": "Carouseling", "Source": "Internal", "Period": 200 },
+      "PMT": {
+        "Mode": "Carouseling",
+        "Source": "Internal",
+        "Period": 200,
+        "PassthruPids": []
+      },
+      "CAT": { "Mode": "Carouseling", "Source": "Internal", "Period": 500 },
+      "BAT": {
+        "Mode": "Disabled",
+        "Source": "Multicast",
+        "Period": 10000,
+        "MulticastCarousel": {
+          "InputUID": -1,
+          "InputPid": 17,
+          "OutputPid": 17,
+          "TablesConfig": [
+            {
+              "Name": "BAT",
+              "InputTableId": 74,
+              "OutputTableId": 74,
+              "Blocked": false
+            }
+          ]
+        }
+      },
+      "SDT": {
+        "Mode": "Pass-Thru",
+        "Source": "Multicast",
+        "Period": 200,
+        "SdtBlockedDescriptors": [],
+        "SdtDescriptors": [],
+        "CharSet": 0,
+        "SdtOtherTables": [],
+        "PassthruUID": 13292
+      },
+      "TDT": { "Mode": "Carouseling", "Source": "Internal", "Period": 15000 },
+      "TOT": {
+        "Mode": "Disabled",
+        "Source": "Internal",
+        "Period": 15000,
+        "TotDescriptors": []
+      },
+      "NIT": {
+        "Mode": "Pass-Thru",
+        "Source": "Multicast",
+        "Period": 2000,
+        "CableDescriptors": [],
+        "TerrestrialDescriptors": [],
+        "Terrestrial2Descriptors": [],
+        "SatelliteDescriptors": [],
+        "UserNetDescriptors": [],
+        "UserTSDescriptors": [],
+        "LcnDescriptor": "Disabled",
+        "PassthruUID": 13292,
+        "NitActualRemap": false,
+        "NitOtherTables": []
+      },
+      "EIT": {
+        "Mode": "Pass-Thru",
+        "Source": "Multicast",
+        "Period": 1000,
+        "BlockedServices": [],
+        "BlockedTableIDs": [],
+        "PassthruUID": 13292
+      },
+      "STT": {
+        "Mode": "Disabled",
+        "Source": "Internal",
+        "Period": 1000,
+        "SttDescriptors": [],
+        "UtcOffset": 0
+      },
+      "MGT": {
+        "Mode": "Disabled",
+        "Source": "Internal",
+        "Period": 150,
+        "MgtDescriptors": []
+      },
+      "VCT": {
+        "Mode": "Disabled",
+        "Source": "Internal",
+        "Period": 400,
+        "VctProfile": "Terrestrial",
+        "Channels": [
+          {
+            "ShortName": "",
+            "MinorNumber": 0,
+            "MajorNumber": 0,
+            "ModulationMode": 0,
+            "AccessControlled": true,
+            "Hidden": false,
+            "HideGuide": false,
+            "ServiceType": 0,
+            "SourceId": 0,
+            "EtmLocation": 0,
+            "PathSelect": false,
+            "OutOfBand": false
+          }
+        ],
+        "VctBlockedDescriptors": [],
+        "VctDescriptors": []
+      },
+      "RRT": {
+        "Mode": "Disabled",
+        "Source": "Internal",
+        "Period": 60000,
+        "BlockedServices": [],
+        "RrtDescriptors": []
+      },
+      "ETT": {
+        "Mode": "Disabled",
+        "Source": "PSIP Generator",
+        "Period": 60000,
+        "BlockedServices": []
+      }
+    },
+    "ExternalPids": [
+      {
+        "Name": "APG3000",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3000, "OutputPid": 3000 }],
+        "UID": 248
+      },
+      {
+        "Name": "APG3003",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3003, "OutputPid": 3003 }],
+        "UID": 249
+      },
+      {
+        "Name": "APG3004",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3004, "OutputPid": 3004 }],
+        "UID": 250
+      },
+      {
+        "Name": "APG3005",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3005, "OutputPid": 3005 }],
+        "UID": 251
+      },
+      {
+        "Name": "APG3006",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3006, "OutputPid": 3006 }],
+        "UID": 252
+      },
+      {
+        "Name": "APG3007",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3007, "OutputPid": 3007 }],
+        "UID": 253
+      },
+      {
+        "Name": "APG3008",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3008, "OutputPid": 3008 }],
+        "UID": 254
+      },
+      {
+        "Name": "APG3009",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3009, "OutputPid": 3009 }],
+        "UID": 255
+      },
+      {
+        "Name": "APG3010",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3010, "OutputPid": 3010 }],
+        "UID": 256
+      },
+      {
+        "Name": "APG3012",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3012, "OutputPid": 3012 }],
+        "UID": 257
+      },
+      {
+        "Name": "APG3013",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3013, "OutputPid": 3013 }],
+        "UID": 258
+      },
+      {
+        "Name": "APG3014",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3014, "OutputPid": 3014 }],
+        "UID": 259
+      },
+      {
+        "Name": "APG3015",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3015, "OutputPid": 3015 }],
+        "UID": 260
+      },
+      {
+        "Name": "APG3168",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 3168, "OutputPid": 3168 }],
+        "UID": 261
+      },
+      {
+        "Name": "FECM",
+        "PassthruUID": 13292,
+        "PassthruPids": [{ "InputPid": 33, "OutputPid": 33 }],
+        "UID": 268
+      }
+    ],
+    "Emmpds": [
+      { "UID": 6, "ConnectionUID": 156, "Pid": 192 },
+      { "UID": 199539, "ConnectionUID": 262, "Pid": 1025 },
+      { "UID": 226410, "ConnectionUID": 263, "Pid": 1027 },
+      { "UID": 274137, "ConnectionUID": 302, "Pid": 1026 }
+    ],
+    "SiManagerActivated": false,
+    "InjectorId": 0,
+    "OnidFollowNId": true,
+    "SiManagerSource": 0,
+    "IndependentNIT": false,
+    "PcrReferences": { "Mode": "Pass-Thru", "Input": 0, "Pid": 0 },
+    "Programs": [
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5101 }
+        ],
+        "UID": 144,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 17
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5071, "EcmUID": 393264 },
+          { "ScgID": 5071, "EcmUID": 393265 },
+          { "ScgID": 5071, "EcmUID": 393266 },
+          { "ScgID": 5071, "EcmUID": 393267 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5103 }
+        ],
+        "UID": 145,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 18
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5073, "EcmUID": 393270 },
+          { "ScgID": 5073, "EcmUID": 393271 },
+          { "ScgID": 5073, "EcmUID": 393272 },
+          { "ScgID": 5073, "EcmUID": 393273 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5104 }
+        ],
+        "UID": 146,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 19
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5331, "EcmUID": 393276 },
+          { "ScgID": 5331, "EcmUID": 393277 },
+          { "ScgID": 5331, "EcmUID": 393278 },
+          { "ScgID": 5331, "EcmUID": 393279 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5105 }
+        ],
+        "UID": 147,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 20
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5248, "EcmUID": 393282 },
+          { "ScgID": 5248, "EcmUID": 393283 },
+          { "ScgID": 5248, "EcmUID": 393284 },
+          { "ScgID": 5248, "EcmUID": 393285 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5106 }
+        ],
+        "UID": 148,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 21
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5332, "EcmUID": 393288 },
+          { "ScgID": 5332, "EcmUID": 393289 },
+          { "ScgID": 5332, "EcmUID": 393290 },
+          { "ScgID": 5332, "EcmUID": 393291 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5107 }
+        ],
+        "UID": 149,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 22
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5268, "EcmUID": 393294 },
+          { "ScgID": 5268, "EcmUID": 393295 },
+          { "ScgID": 5268, "EcmUID": 393296 },
+          { "ScgID": 5268, "EcmUID": 393297 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5108 }
+        ],
+        "UID": 150,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 23
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5348, "EcmUID": 393300 },
+          { "ScgID": 5348, "EcmUID": 393301 },
+          { "ScgID": 5348, "EcmUID": 393302 },
+          { "ScgID": 5348, "EcmUID": 393303 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      },
+      {
+        "Connections": [
+          { "InputStreamUID": 13292, "InputProgramNumber": 5109 }
+        ],
+        "UID": 151,
+        "ComponentRules": [
+          {
+            "Priority": 1,
+            "Type": "scte35",
+            "Codec": "*",
+            "Language": "*",
+            "InputPid": "*",
+            "InputStreamId": "*",
+            "InputProgramId": "*",
+            "Mode": "block",
+            "OutputPid": "*",
+            "AddOffset": 0,
+            "UID": 24
+          }
+        ],
+        "Enabled": true,
+        "ProgramNumber": { "FollowInput": true },
+        "ServiceName": { "FollowInput": true },
+        "ProviderName": { "FollowInput": true },
+        "ServiceType": { "FollowInput": true },
+        "PmtPid": { "FollowInput": true },
+        "PcrPid": { "IndependantPid": false },
+        "PidConnections": [],
+        "ExtraPids": [],
+        "Pmt": {
+          "PmtBlockedOuterDescriptors": [],
+          "PmtBlockedInnerDescriptors": [],
+          "PmtOuterDescriptors": [],
+          "PmtInnerDescriptors": []
+        },
+        "RateControl": { "RateControlMode": "passthrough" },
+        "VctChannel": {
+          "ShortName": { "FollowInput": true },
+          "MajorNumber": { "FollowInput": true },
+          "MinorNumber": { "FollowInput": true },
+          "ModulationMode": { "FollowInput": true },
+          "AccessControlled": { "FollowInput": true },
+          "Hidden": { "FollowInput": true },
+          "HideGuide": { "FollowInput": true },
+          "ServiceType": { "FollowInput": true },
+          "SourceId": { "FollowInput": true },
+          "EtmLocation": { "FollowInput": true },
+          "PathSelect": { "FollowInput": true },
+          "OutOfBand": { "FollowInput": true }
+        },
+        "LogicalChannels": [{ "LogicalChannelNumber": 0, "Visibility": true }],
+        "BISS": {
+          "Mode": "0",
+          "SessionWord": "************",
+          "EncryptedSessionWord": "****************",
+          "InjectedId": "**************",
+          "SWUpdates": []
+        },
+        "ServiceReplacementConf": { "Mode": "Auto" },
+        "Priority": "Medium",
+        "ObfuscationConf": { "Activated": false, "ComponentObfuscation": [] },
+        "Ecms": [],
+        "EcmsScg": [
+          { "ScgID": 5548, "EcmUID": 393306 },
+          { "ScgID": 5548, "EcmUID": 393307 },
+          { "ScgID": 5548, "EcmUID": 393308 },
+          { "ScgID": 5548, "EcmUID": 393309 }
+        ],
+        "SlateConf": { "Mode": "None", "Pids": [], "ExcludedPids": [] },
+        "RulesFollowMaster": true
+      }
+    ]
   }
-}
+]

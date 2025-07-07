@@ -52,22 +52,104 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Função para buscar dados da API mockada
+  // Função para buscar dados da API
   async function fetchData(system, outputElementId, type) {
     startLoadingBar();
-    try {
-      const systemIP =
-        type === 'primary' ? muxes[system].primary : muxes[system].backup;
-      const response = await fetch(`http://${systemIP}`);
-      if (!response.ok) {
-        throw new Error('Erro ao buscar dados da API');
-      }
-      const data = await response.json();
-      const psiData = data.psiData;
-      const statsData = data.statsData;
+    const systemIP =
+      type === 'primary' ? muxes[system].primary : muxes[system].backup;
+    const auth = btoa('Operator:TitanMux@At3me');
 
-      // Exibe os dados da API
-      displayData([], psiData, statsData, outputElementId, system);
+    try {
+      // Fetch available outputs to get the correct UID
+      const outputsUrl = `http://${systemIP}/api/v1/mux/outputs`;
+      const outputsResponse = await fetch(outputsUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Basic ${auth}`,
+        },
+      });
+
+      if (!outputsResponse.ok) {
+        throw new Error(`Erro ao buscar outputs: ${outputsResponse.status}`);
+      }
+
+      const outputsData = await outputsResponse.json();
+      let outputNumber = outputsData[0]?.UID;
+
+      if (!outputNumber) {
+        throw new Error('UID do output não encontrado');
+      }
+
+      // Fetch scrambling data
+      let scramblingUrl = `http://${systemIP}/api/v1/mux/outputs/${outputNumber}/scrambling`;
+      let scramblingResponse = await fetch(scramblingUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Basic ${auth}`,
+        },
+      });
+
+      if (!scramblingResponse.ok) {
+        const scramblingError = await scramblingResponse.json();
+        if (scramblingError.ShortMsg === 'Invalid UID') {
+          // If output UID is invalid, try output 4
+          outputNumber = 4;
+          scramblingUrl = `http://${systemIP}/api/v1/mux/outputs/${outputNumber}/scrambling`;
+          scramblingResponse = await fetch(scramblingUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!scramblingResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de scrambling: ${scramblingResponse.status}`
+            );
+          }
+        } else {
+          throw new Error(
+            `Erro ao buscar dados de scrambling: ${scramblingResponse.status} - ${scramblingError.FullMsg}`
+          );
+        }
+      }
+      const scramblingData = await scramblingResponse.json();
+
+      // Fetch PSI data
+      let psiUrl = `http://${systemIP}/api/v1/mux/outputs/${outputNumber}/psi`;
+      let psiResponse = await fetch(psiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Basic ${auth}`,
+        },
+      });
+      if (!psiResponse.ok) {
+        throw new Error(`Erro ao buscar dados de PSI: ${psiResponse.status}`);
+      }
+      const psiData = await psiResponse.json();
+
+      // Fetch stats data
+      let statsUrl = `http://${systemIP}/api/v1/mux/outputs/${outputNumber}/stats`;
+      let statsResponse = await fetch(statsUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Basic ${auth}`,
+        },
+      });
+      if (!statsResponse.ok) {
+        throw new Error(
+          `Erro ao buscar dados de stats: ${statsResponse.status}`
+        );
+      }
+      const statsData = await statsResponse.json();
+
+      // Display the data
+      displayData(
+        scramblingData,
+        psiData,
+        statsData,
+        outputElementId,
+        systemIP
+      );
       checkForLongScramblingState(psiData, system);
     } catch (error) {
       document.getElementById(
@@ -77,12 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function determineCardColor(pidStates, program, systemIP) {
-    let cardColor = '#d3d3d3'; // Default to gray
+    let cardColor = '#ccffcc'; // Default to green (Even or Odd)
 
-    if (pidStates.some((state) => state === 0)) {
-      cardColor = '#d3d3d3'; // Cinza para Clear
-    } else {
-      cardColor = '#ccffcc'; // Verde para Even ou Odd
+    // Definir como cinza apenas se todos os PIDs estiverem no estado Clear
+    if (pidStates.every((state) => state === 0)) {
+      cardColor = '#d3d3d3'; // Cinza para todos Clear
     }
 
     // Verificar se algum PID tem lastChangeTime maior que 5 minutos e estado diferente de Clear
@@ -180,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             (stat) => stat.pid === pid.pid
           );
           let bitrate = pidStats
-            ? (pidStats.bitrate / 100000).toFixed(2)
+            ? (pidStats.bitrate / 1000000).toFixed(2)
             : 'N/A';
 
           if (scramblingState) {

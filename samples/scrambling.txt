@@ -1,0 +1,12 @@
+curl "http://10.218.31.69/api/v1/mux/outputs/3/scrambling" ^
+  -H "Accept: */*" ^
+  -H "Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7" ^
+  -H "Authorization: Basic T3BlcmF0b3I6VGl0YW5NdXhAQXQzbWU=" ^
+  -H "Connection: keep-alive" ^
+  -H "Origin: null" ^
+  -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" ^
+  --compressed ^
+  --insecure
+
+
+[{"Name": "EMM PID", "DataID": 2, "DataType": "Entitlement Management Message", "PrivateData": "", "MaxBitrate": 700000, "Pid": 192, "CaDescriptors": [{"CasId": "0942", "PrivateData": "00C0", "Description": ""}], "EmmpdgUID": 5, "UID": 6, "TrafficShaping": false}, {"Name": "EMM Nagra", "DataID": 1, "DataType": "Entitlement Management Message", "PrivateData": "", "MaxBitrate": 700000, "Pid": 1025, "CaDescriptors": [{"CasId": "182b", "PrivateData": "0401", "Description": "EMM Nagra"}], "EmmpdgUID": 60123, "UID": 60124, "TrafficShaping": false}, {"Name": "EMM Verimatrix", "DataID": 3, "DataType": "Entitlement Management Message", "PrivateData": "", "MaxBitrate": 200000, "Pid": 1027, "CaDescriptors": [{"CasId": "171A", "PrivateData": "0403", "Description": "Emm Verimatrix"}], "EmmpdgUID": 69452, "UID": 69453, "TrafficShaping": false}, {"Name": "EMM Nagra - TVRO", "DataID": 1, "DataType": "Entitlement Management Message", "PrivateData": "", "MaxBitrate": 200000, "TrafficShaping": false, "Pid": 1026, "CaDescriptors": [], "EmmpdgUID": 84614, "UID": 84615}]

@@ -1,18 +1,14 @@
 {
-  "J02": {
-    "primary": "localhost:3000/j02",
-    "backup": "localhost:3000/j02"
+  "J49": {
+    "primary": "10.218.31.72",
+    "backup": "10.218.31.73"
   },
-  "J04": {
-    "primary": "localhost:3000/j04",
-    "backup": "localhost:3000/j04"
+  "J50": {
+    "primary": "10.218.31.70",
+    "backup": "10.218.31.71"
   },
-  "J05": {
-    "primary": "localhost:3000/j05",
-    "backup": "localhost:3000/j05"
-  },
-  "J06": {
-    "primary": "localhost:3000/j06",
-    "backup": "localhost:3000/j06"
+  "J51": {
+    "primary": "10.218.31.68",
+    "backup": "10.218.31.69"
   }
 }

@@ -1,0 +1,15 @@
+curl 'http://10.218.31.73/api/v1/mux/cas/ecmgs/4210/status' \
+  -H 'Accept: application/json, text/plain' \
+  -H 'Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Connection: keep-alive' \
+  -H 'If-Modified-Since: 0' \
+  -H 'Referer: http://10.218.31.73/index.html' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36' \
+  -H 'token: eef8a892fcd143a3acf1598a7e9c2fa9' \
+  --compressed \
+  --insecure
+
+
+
+{"ecmguid": 4210, "servers": [{"priority": 0, "state": 3}, {"priority": 1, "state": 0}], "activeserverpriority": 0}

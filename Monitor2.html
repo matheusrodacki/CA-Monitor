@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CA Monitor - API Data</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .service-card {
+        height: 250px;
+        overflow: hidden;
+      }
+      .card-text {
+        height: 700px;
+        overflow-y: auto;
+      }
+      #progress-bar-container {
+        width: 100%;
+        height: 5px;
+        background-color: #e9ecef;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+      #progress-bar {
+        height: 100%;
+        width: 100%;
+        background-color: #007bff;
+        transition: width 3s linear;
+      }
+    </style>
+  </head>
+  <body class="container-fluid mt-5">
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+    <h1 class="text-center mb-4">Monitor de Controle de Scrambling</h1>
+    <div class="text-center mb-4">
+      <label for="systemSelect" class="form-label">Selecione um sistema:</label>
+      <select
+        id="systemSelect"
+        class="form-select d-inline-block w-auto"
+        onchange="startAutoFetch()">
+        <option value="J02">J02</option>
+        <option value="J04">J04</option>
+        <option value="J06">J06</option>
+        <option value="J07">J07-26</option>
+        <option value="J08">J08</option>
+        <option value="J09">J09-28</option>
+        <option value="J10">J10</option>
+        <option value="J11">J11-34</option>
+        <option value="J12">J12</option>
+        <option value="J14">J14</option>
+        <option value="J18">J18</option>
+        <option value="J19">J19-19</option>
+        <option value="J20">J20</option>
+        <option value="J21">J21-32</option>
+        <option value="J22">J22</option>
+		<option value="JENG">JENG</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="col-md-6 px-2">
+        <div class="card p-4 mb-4" id="primary-mux">
+          <h3>Dados do Sistema Primário</h3>
+          <div id="services-primary" class="row g-3 mt-3"></div>
+        </div>
+      </div>
+      <div class="col-md-6 px-2">
+        <div class="card p-4 mb-4" id="backup-mux">
+          <h3>Dados do Sistema Backup</h3>
+          <div id="services-backup" class="row g-3 mt-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let autoFetchInterval;
+      let lastScramblingState = {};
+      let progressInterval;
+
+      const systems = {
+        J02: { primary: '10.218.23.68', backup: '10.218.23.69' },
+        J04: { primary: '10.218.23.70', backup: '10.218.23.71' },
+        J06: { primary: '10.218.23.72', backup: '10.218.23.73' },
+        J07: { primary: '10.218.23.74', backup: '10.218.23.75' },
+        J08: { primary: '10.218.23.76', backup: '10.218.23.77' },
+        J09: { primary: '10.218.23.78', backup: '10.218.23.79' },
+        J10: { primary: '10.218.23.80', backup: '10.218.23.81' },
+        J11: { primary: '10.218.23.82', backup: '10.218.23.83' },
+        J12: { primary: '10.218.23.84', backup: '10.218.23.85' },
+        J14: { primary: '10.218.23.86', backup: '10.218.23.86' },
+        J18: { primary: '10.218.23.90', backup: '10.218.23.91' },
+        J19: { primary: '10.218.23.88', backup: '10.218.23.89' },
+        J20: { primary: '10.218.23.94', backup: '10.218.23.95' },
+        J21: { primary: '10.218.23.96', backup: '10.218.23.97' },
+        J22: { primary: '10.218.23.98', backup: '10.218.23.99' },
+        JENG: { primary: '10.218.23.100', backup: '10.218.23.101' },
+      };
+
+      async function fetchData(system, outputElementId, type) {
+        const systemIP = systems[system][type];
+        const auth = btoa('Operator:TitanMux@At3me');
+        try {
+          // Fetch scrambling data
+          const scramblingUrl = `http://${systemIP}/api/v1/mux/outputs/3/scrambling`;
+          const scramblingResponse = await fetch(scramblingUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!scramblingResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de scrambling: ${scramblingResponse.status}`
+            );
+          }
+          const scramblingData = await scramblingResponse.json();
+
+          // Fetch PSI data
+          const psiUrl = `http://${systemIP}/api/v1/mux/outputs/3/psi`;
+          const psiResponse = await fetch(psiUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!psiResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de PSI: ${psiResponse.status}`
+            );
+          }
+          const psiData = await psiResponse.json();
+
+          //Fetch stats data
+          const statsUrl = `http://${systemIP}/api/v1/mux/outputs/3/stats`;
+          const statsResponse = await fetch(statsUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!statsResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de stats: ${statsResponse.status}`
+            );
+          }
+          const statsData = await statsResponse.json();
+
+          // Display both scrambling and PSI data
+          displayData(
+            scramblingData,
+            psiData,
+            statsData,
+            outputElementId,
+            systemIP
+          );
+        } catch (error) {
+          document.getElementById(
+            outputElementId
+          ).innerHTML = `<div class="alert alert-danger">Erro ao buscar dados: ${error.message}</div>`;
+        }
+      }
+	  
+	  function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+      function displayData(
+        scramblingData,
+        psiData,
+        statsData,
+        outputElementId,
+        systemIP
+      ) {
+        const outputContainer = document.getElementById(outputElementId);
+        outputContainer.innerHTML = '';
+
+        psiData.programs.forEach((program) => {
+          let pidDetails = program.pids
+            .map((pid) => {
+              let scramblingState = statsData.PIDStats.find(
+                (stat) => stat.pid === pid.pid
+              );
+              let state = 'Clear';
+              let lastChangeTime = 'N/A';
+
+              let pidStats = statsData.PIDStats.find(
+                (stat) => stat.pid === pid.pid
+              );
+              let bitrate = pidStats ? (pidStats.bitrate / 1000000).toFixed(2) : 'N/A';
+
+              if (scramblingState) {
+                if (scramblingState.scramblingstate === 3) {
+                  state = 'Odd';
+                } else if (scramblingState.scramblingstate === 2) {
+                  state = 'Even';
+                } else if (scramblingState.scramblingstate === 0) {
+                  state = 'Clear';
+                }
+              }
+
+                if (!lastScramblingState[`${systemIP}-${pid.pid}`]) {
+                  lastScramblingState[`${systemIP}-${pid.pid}`] = {
+                    state: state,
+                    time: new Date().toLocaleString(),
+                  };
+                } else if (
+                  lastScramblingState[`${systemIP}-${pid.pid}`].state !== state
+                ) {
+                  lastScramblingState[`${systemIP}-${pid.pid}`] = {
+                    state: state,
+                    time: new Date().toLocaleString(),
+                  };
+                }
+
+                lastChangeTime =
+                  lastScramblingState[`${systemIP}-${pid.pid}`].time;
+              
+              return `PID: ${pid.pid} - ${capitalizeFirstLetter(pid.streamTypeDesc)} - ${state} - X: ${lastChangeTime} - Bitrate: ${bitrate} Mbps`;
+            })
+            .join('<br>');
+
+          let serviceCard = document.createElement('div');
+          serviceCard.className = 'col-12 col-md-4';
+          serviceCard.innerHTML = `
+                    <div class="card service-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Programa ID: ${program.programId}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Nome do Serviço: ${program.serviceName}</h6>
+                            <p class="card-text">
+                                <strong>PIDs:</strong><br>
+                                ${pidDetails}
+                            </p>
+                        </div>
+                    </div>
+                `;
+          outputContainer.appendChild(serviceCard);
+        });
+      }
+
+      function startProgressBar() {
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = '100%';
+        progressBar.style.transition = 'none';
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+          progressBar.style.transition = 'width 3s linear';
+          progressBar.style.width = '0%';
+        }, 50);
+      }
+
+      function startAutoFetch() {
+        clearInterval(autoFetchInterval);
+        clearInterval(progressInterval);
+        const selectedSystem = document.getElementById('systemSelect').value;
+        fetchData(selectedSystem, 'services-primary', 'primary');
+        fetchData(selectedSystem, 'services-backup', 'backup');
+        startProgressBar();
+        autoFetchInterval = setInterval(() => {
+          fetchData(selectedSystem, 'services-primary', 'primary');
+          fetchData(selectedSystem, 'services-backup', 'backup');
+          startProgressBar();
+        }, 3000);
+      }
+
+      window.onload = startAutoFetch;
+    </script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

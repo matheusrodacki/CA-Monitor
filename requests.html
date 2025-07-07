@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <title>Request IP Information</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <h3 class="text-center">IP Request Form</h3>
+          <div class="form-group">
+            <label for="ipAddress mb-3">Enter System IP:</label>
+            <input
+              type="text"
+              id="ipAddress"
+              class="form-control mb-3"
+              placeholder="Enter IP address" />
+          </div>
+          <button id="sendRequest" class="btn btn-primary btn-block">
+            Send
+          </button>
+          <div id="response" class="mt-4">
+            <!-- Response will be displayed here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById('sendRequest')
+        .addEventListener('click', function () {
+          const ip = document.getElementById('ipAddress').value;
+          if (!ip) {
+            alert('Please enter a valid IP address');
+            return;
+          }
+
+          const responseContainer = document.getElementById('response');
+          responseContainer.innerHTML = '<p>Sending requests...</p>';
+
+          responseContainer.innerHTML += `<div> ${JSON.stringify(
+            fetchData(ip)
+          )}</div>`;
+        });
+
+      async function fetchData(systemIP, outputElementId, type) {
+        const auth = btoa('Operator:TitanMux@At3me');
+
+        try {
+          // Fetch scrambling data
+          const scramblingUrl = `http://${systemIP}/api/v1/mux/outputs`;
+          const scramblingResponse = await fetch(scramblingUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!scramblingResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de scrambling: ${scramblingResponse.status} ${statsResponse.message}`
+            );
+          }
+          const scramblingData = await scramblingResponse.json();
+
+          // Fetch PSI data
+          const psiUrl = `http://${systemIP}/api/v1/mux/outputs/3/psi`;
+          const psiResponse = await fetch(psiUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Basic ${auth}`,
+            },
+          });
+          if (!psiResponse.ok) {
+            throw new Error(
+              `Erro ao buscar dados de PSI: ${psiResponse.status} ${statsResponse.message}`
+            );
+          }
+          const psiData = await psiResponse.json();
+
+          // // Fetch stats data
+          // const statsUrl = `http://${systemIP}/api/v1/mux/outputs/3/stats`;
+          // const statsResponse = await fetch(statsUrl, {
+          //   method: 'GET',
+          //   headers: {
+          //     Authorization: `Basic ${auth}`,
+          //   },
+          // });
+          // if (!statsResponse.ok) {
+          //   throw new Error(
+          //     `Erro ao buscar dados de stats: ${statsResponse.status} ${statsResponse.message}`
+          //   );
+          // }
+          // const statsData = await statsResponse.json();
+
+          return scramblingData;
+        } catch (error) {
+          document.getElementById(
+            'response'
+          ).innerHTML = `<div class="alert alert-danger">Erro ao buscar dados: ${error.message}</div>`;
+        }
+      }
+    </script>
+
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
